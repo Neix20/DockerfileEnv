@@ -12,3 +12,6 @@ docker exec -it test-env /bin/sh
 
 # Check Logs
 docker logs test-env
+
+# Copy Image
+cp ~/Downloads/Screenshot_2-9-2025_33753_portal.azure.com.jpeg ./apim-screenshot.jpeg
