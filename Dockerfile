@@ -10,12 +10,24 @@ RUN apk update && apk add --no-cache \
   vim \
   && rm -rf /var/cache/apk/*
 
-WORKDIR /home/app
+WORKDIR /home
 
-# Declare build arg
-ARG ENVIRONMENT
+COPY . .
 
-# Copy the correct env.txt into main.txt
-COPY app/${ENVIRONMENT}/env.txt /home/app/main.txt
+# Debian
+# RUN groupadd -g 1000 appuser && useradd -s /bin/sh -d /home/app -m -u 1000 -g appuser appuser
 
-ENTRYPOINT [ "/bin/sh", "-c", "sleep infinity" ]
+# Alpine
+RUN addgroup -g 1000 appuser && adduser -D -s /bin/sh -u 1000 -G appuser appuser
+
+# Modify File Permission
+RUN chmod +x /home/entrypoint.sh
+RUN chown -R appuser:appuser /home
+
+USER appuser
+
+# Environment
+ENV APP_ENV=dev
+
+# Entrypoint script
+ENTRYPOINT ["/home/entrypoint.sh"]
